@@ -1,0 +1,50 @@
+*{
+    margin: 0;
+    padding: 0;
+    
+    font-family: 'Dosis', sans-serif;
+}
+
+h1{
+    font-family: 'Fjalla One', sans-serif;
+    text-align: center;
+    padding: 30px;
+    font-size: 50px;
+    color: white;
+    text-shadow: deeppink 5px 5px 10px;
+}
+
+#megaheader {
+    background-color: palevioletred;
+    height: 650px;
+
+}
+
+#contentarea{
+    background-color: white;
+    width: 900px;
+    height: 90vh;
+    margin-left: 100px;
+    border: solid 3px deeppink;
+    box-shadow: deeppink 10px -10px 20px;
+    position: absolute;
+    top: 250px
+}
+
+#logo {
+    background-color: violet;
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    top: 50px;
+    left: 60px;
+}
+
+#autharea {
+    background-color: royalblue;
+    width: 150px;
+    height: 80px;
+    position: absolute;
+    top: 50px;
+    right: 50px;
+}
