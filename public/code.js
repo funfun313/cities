@@ -1,6 +1,7 @@
 const storage = firebase.app().storage();
 const storageRef = storage.ref();
 
+
 function upload(){
     console.log("starting to store file...");
     const f = document.getElementById("myFile");
@@ -12,4 +13,14 @@ function upload(){
     }
 
     )
+}
+
+function openupload(){
+    const uploaddiv = document.getElementById("uploadarea");
+    uploaddiv.style.display = "block";
+}
+
+function closeupload(){
+    const uploaddiv = document.getElementById("uploadarea");
+    uploaddiv.style.display = "none";
 }

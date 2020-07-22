@@ -21,12 +21,17 @@
   <body>
     <div id="megaheader">
       <h1>Best City Photos</h1>
-      <div id="logo" ></div>
+      <div id="logo" ><img src="img/tower.png" alt="" height="200px"></div>
       <div id="autharea"></div>
+      <button id="uploadbtn" onclick="openupload()">upload</button>
     </div>
     <div id= "contentarea"></div>
-    <input type="file" name= "filename" id= "myFile">
-    <button onclick = "upload()">click me</button>
+    <div id= "uploadarea">
+
+      <button id= "closebtn" onclick="closeupload()">Close</button>
+      <input type="file" name= "filename" id= "myFile">
+      <button onclick = "upload()">click me</button>
+    </div>
     <script defer src="code.js"></script>
   </body>
 </html>
