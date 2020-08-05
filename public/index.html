@@ -23,14 +23,38 @@
       <h1>Best City Photos</h1>
       <div id="logo" ><img src="img/tower.png" alt="" height="200px"></div>
       <div id="autharea"></div>
-      <button id="uploadbtn" onclick="openupload()">upload</button>
+      <div id="openupload">
+        <img src="img/cloud.png" width ="75px" onclick="openupload()">
+      </div>
+  
     </div>
     <div id= "contentarea"></div>
     <div id= "uploadarea">
+      <button class = "nicebtn" id="selectpic">Select photo</button>
+      <p>
+        <input type="text" name="" id="captiontext" placeholder="enter a caption">
+      </p>
 
-      <button id= "closebtn" onclick="closeupload()">Close</button>
-      <input type="file" name= "filename" id= "myFile">
-      <button onclick = "upload()">click me</button>
+      <div id="categoryselect">
+        <div>        <input type="radio" id="small" name="category" value="small">
+          <label for="small">Small Cities</label><br>
+        </div>
+        <div>
+          <input type="radio" id="medium" name="category" value="medium">
+          <label for="medium">Medium Cities</label><br>
+        </div>
+        <div>
+          <input type="radio" id="large" name="category" value="large">
+          <label for="large">Large Cities</label>
+        </div>
+
+      </div>
+      
+      <button id= "closebtn" onclick="closeupload()" >Close</button>
+      <div hidden>
+        <input type="file" name= "filename" id= "myFile">
+        <button onclick = "upload()">click me</button>
+      </div>
     </div>
     <script defer src="code.js"></script>
   </body>
