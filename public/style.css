@@ -22,9 +22,9 @@ h1{
 
 #contentarea{
     background-color: white;
-    width: 900px;
+    width: 1000px;
     height: 90vh;
-    margin-left: 100px;
+    margin-left: 400px;
     border: solid 3px deeppink;
     box-shadow: deeppink 1px -1px 2px;
     position: absolute;
@@ -33,12 +33,12 @@ h1{
 
 #uploadarea {
     background-color: rgb(247, 201, 233);
-    width: 1000px;
-    height: 550px;
-    margin-left: 50px;
+    width: 1100px;
+    height: 450px;
+    margin-left: 350px;
     border: solid 3px white;
     position: absolute;
-    top: 200px;
+    top: 300px;
     display: none;
     text-align: center;
 }
@@ -78,11 +78,12 @@ h1{
     color: rgb(0, 0, 0);
     border-radius: 10px;
     padding: 10px 30px;
+    margin-top: 40px;
 
 }
 
 #selectpic {
-    margin-top: 100px;
+    margin-top: 60px;
 }
 
 #captiontext {
@@ -95,4 +96,8 @@ h1{
 #categoryselect {
     display: grid;
     grid-template-columns: auto auto auto;
+    justify-content: center;
+    margin-top: 40px;
+    grid-gap: 20px;
+    font-size: 20px;
 }

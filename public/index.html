@@ -30,7 +30,7 @@
     </div>
     <div id= "contentarea"></div>
     <div id= "uploadarea">
-      <button class = "nicebtn" id="selectpic">Select photo</button>
+      <button class = "nicebtn" id="selectpic" onclick="doselect()">Select photo</button>
       <p>
         <input type="text" name="" id="captiontext" placeholder="enter a caption">
       </p>
@@ -47,9 +47,8 @@
           <input type="radio" id="large" name="category" value="large">
           <label for="large">Large Cities</label>
         </div>
-
       </div>
-      
+      <button class="nicebtn" onclick = "upload()">Upload</button>
       <button id= "closebtn" onclick="closeupload()" >Close</button>
       <div hidden>
         <input type="file" name= "filename" id= "myFile">
