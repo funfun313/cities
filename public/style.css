@@ -104,11 +104,22 @@ h1{
 
 .photo{
     margin: 20px;
-    border: 2px solid #e2e2e2;
+    text-align: center;
+    background-color: #e2e2e2;
 
 }
 
 #photodisplay{
     display: grid;
     grid-template-columns: auto auto auto;
+}
+
+.caption{
+    height: 70px;
+    padding-top: 10px;
+    font-size: 12px;
+}
+
+.author{
+    font-size: 14px;
 }
