@@ -7,19 +7,25 @@ const postsRef = dbRef.ref('posts');
 const f = document.getElementById("myFile");
 
 window.onload = function(){
-    storageRef.listAll().then(function(result){
-        console.log(result.items);
+
+    postsRef.once("value").then(function(snapshot){
         // set up html to recieve image info
         const photodiv = document.getElementById("photodisplay");
         photodiv.innerHTML = "";
-        // loop through the images
-        result.items.forEach(function(img){
+        
+
+        snapshot.forEach(function(childSnapshot){
+            console.log(childSnapshot.val());
+            let img = storageRef.child(childSnapshot.val().img_pth);
             img.getDownloadURL().then(function(url){
-                // write some html
-                photodiv.innerHTML = photodiv.innerHTML + "<div class='photo'><div class= 'author'>Wonder Woman</div><img src = '" + url + "' width = '200px'><div class='caption'>what an amazing photo :)</div></div>";
+                 // write some html
+                photodiv.innerHTML = photodiv.innerHTML + "<div class='photo'><div class= 'author'>"+ childSnapshot.val().author +  "</div><img src = '" + url + "' width = '200px'><div class='caption'>"+ childSnapshot.val().caption +"</div></div>";
             })
+
+                    
         })
     })
+    
 }
 
 function upload(){
@@ -47,8 +53,11 @@ function savePicInfo(img){
             category = radiobtn.value;
         }
     }
-
-    postsRef.child(category).push( {
+    console.log(category);
+    console.log(img);
+    console.log(document.getElementById("captiontext").value);
+    
+    postsRef.child(cateogry).push( {
             author: 'AUTHOR',
             caption: document.getElementById("captiontext").value,
             img_pth: img,
