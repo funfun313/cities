@@ -10,7 +10,17 @@ const f = document.getElementById("myFile");
 const appAuth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
 
+const userDisplay = document.getElementById("currentuser");
+const loginDisplay = document.getElementById("loginlink");
+const logoutDisplay = document.getElementById("logoutlink");
+
+
+
 window.onload = function(){
+    // start logged out
+    userDisplay.innerHTML = "";
+    loginDisplay.style.display = "block";
+    logoutDisplay.style.display = "none";
 
     postsRef.once("value").then(function(snapshot){
         //displayAllPhotos(snapshot);
@@ -99,3 +109,19 @@ function closeupload(){
 function doselect(){
     document.getElementById("myFile").click();
 }
+
+function login(){
+    appAuth.signInWithPopup(provider).then(function(result){
+        console.log(result);
+    });
+
+    userDisplay.innerHTML = "Hello Kitty";
+    loginDisplay.style.display = "none";
+    logoutDisplay.style.display = "block";
+}
+
+function logout(){
+    userDisplay.innerHTML = "";
+    loginDisplay.style.display = "block";
+    logoutDisplay.style.display = "none";
+} 
