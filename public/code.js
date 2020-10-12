@@ -3,6 +3,7 @@ const storageRef = storage.ref();
 
 const dbRef = firebase.app().database();
 const postsRef = dbRef.ref('posts');
+const usersRef = dbRef.ref('users');
 
 const f = document.getElementById("myFile");
 
@@ -88,7 +89,7 @@ function savePicInfo(img){
     console.log(document.getElementById("captiontext").value);
     
     postsRef.child(category).push( {
-            author: 'AUTHOR',
+            author: appAuth.currentUser.displayName,
             caption: document.getElementById("captiontext").value,
             img_pth: img,
             date_added: Date.now()
@@ -109,19 +110,40 @@ function closeupload(){
 function doselect(){
     document.getElementById("myFile").click();
 }
+function getUserValue(item){
+    console.log(item.val());
+
+}
 
 function login(){
     appAuth.signInWithPopup(provider).then(function(result){
-        console.log(result);
+        //check if email is on allowed list in the database
+        usersRef.once("value").then(function(snapshot){
+            //displayAllPhotos(snapshot);
+            console.log(snapshot);
+
+            snapshot.forEach(function(item){
+                console.log(result["user"]["email"])
+                if( item.val() == result["user"]["email"]){
+                    //console.log(result["user"]["displayName"]);
+                    userDisplay.innerHTML = result["user"]["displayName"];
+                    loginDisplay.style.display = "none";
+                    logoutDisplay.style.display = "block";                   
+                }
+                
+            });
+        });
+        
+   
     });
 
-    userDisplay.innerHTML = "Hello Kitty";
-    loginDisplay.style.display = "none";
-    logoutDisplay.style.display = "block";
 }
 
 function logout(){
-    userDisplay.innerHTML = "";
-    loginDisplay.style.display = "block";
-    logoutDisplay.style.display = "none";
+    appAuth.signOut().then(function(){
+        userDisplay.innerHTML = "";
+        loginDisplay.style.display = "block";
+        logoutDisplay.style.display = "none";
+    })
+    
 } 
