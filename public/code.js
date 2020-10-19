@@ -14,14 +14,18 @@ const provider = new firebase.auth.GoogleAuthProvider();
 const userDisplay = document.getElementById("currentuser");
 const loginDisplay = document.getElementById("loginlink");
 const logoutDisplay = document.getElementById("logoutlink");
-
+const uploadDisplay = document.getElementById("openupload");
 
 
 window.onload = function(){
+    //see autnentication state
+    appAuth.signOut().then(function(){
+        userDisplay.innerHTML = "";
+        loginDisplay.style.display = "block";
+        logoutDisplay.style.display = "none";
+        uploadDisplay.style.display = "none";
+    })
     // start logged out
-    userDisplay.innerHTML = "";
-    loginDisplay.style.display = "block";
-    logoutDisplay.style.display = "none";
 
     postsRef.once("value").then(function(snapshot){
         //displayAllPhotos(snapshot);
@@ -35,7 +39,25 @@ postsRef.on("value", function(snapshot){
     displayAllPhotos(snapshot);
 })
 
+//this function listens to changes in authenication
+appAuth.onAuthStateChanged(function(user){
+    if(!appAuth.currentUser){
+        console.log("not logged in");
+        const photodiv = document.getElementById("photodisplay");
+        photodiv.innerHTML = "";  
+    }
+    else{
+        postsRef.once("value").then(function(snapshot){
+            //displayAllPhotos(snapshot);
+            displayAllPhotos(snapshot);
+        });
+    }
+})
+
 function displayAllPhotos(snapshot){
+    if(!appAuth.currentUser){
+        return;
+    }
 
     // set up html to recieve image info
     const photodiv = document.getElementById("photodisplay");
@@ -128,7 +150,10 @@ function login(){
                     //console.log(result["user"]["displayName"]);
                     userDisplay.innerHTML = result["user"]["displayName"];
                     loginDisplay.style.display = "none";
-                    logoutDisplay.style.display = "block";                   
+                    logoutDisplay.style.display = "block"; 
+                    uploadDisplay.style.display = "block";
+
+             
                 }
                 
             });
@@ -144,6 +169,8 @@ function logout(){
         userDisplay.innerHTML = "";
         loginDisplay.style.display = "block";
         logoutDisplay.style.display = "none";
+
+        uploadDisplay.style.display = "none";
     })
     
 } 
