@@ -47,10 +47,20 @@ appAuth.onAuthStateChanged(function(user){
         photodiv.innerHTML = "";  
     }
     else{
-        postsRef.once("value").then(function(snapshot){
+        //check if allowed user
+        usersRef.once("value").then(function(snapshot){
             //displayAllPhotos(snapshot);
-            displayAllPhotos(snapshot);
-        });
+            console.log(snapshot);
+
+            snapshot.forEach(function(item){
+                if( item.val() == user["email"]){
+                    postsRef.once("value").then(function(snapshot){
+                    //displayAllPhotos(snapshot);
+                    displayAllPhotos(snapshot);
+                    })
+                }
+            })
+        })
     }
 })
 
@@ -72,7 +82,7 @@ function displayAllPhotos(snapshot){
             img.getDownloadURL().then(function(url){
                     // write some html
                     console.log("right before the html");
-                photodiv.innerHTML = photodiv.innerHTML + "<div class='photo'><div class= 'author'>"+ childSnapshot.val().author +  "</div><img src = '" + url + "' width = '200px'><div class='caption'>"+ childSnapshot.val().caption +"</div></div>";
+                photodiv.innerHTML = photodiv.innerHTML + "<div><div class='photo'><div class= 'author'>"+ childSnapshot.val().author +  "</div><img src = '" + url + "' width = '200px'><div class='caption'>"+ childSnapshot.val().caption +"</div></div><div class = 'likes'><img src='img/heartunfilled.png' width = '25px' class = 'imgheart'> <span class = 'likecount'> 123 </span></div></div> ";
             })
 
                     

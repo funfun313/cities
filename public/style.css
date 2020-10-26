@@ -102,12 +102,24 @@ h1{
 }
 
 .photo{
-    margin: 20px;
+    margin: 20px 20px 0px 20px;
+    text-align: center;
+    background-color: #e2e2e2;
+
+}
+.likes{
+    margin: 0px 20px;
     text-align: center;
     background-color: #e2e2e2;
 
 }
 
+.likecount{
+    vertical-align: bottom;
+}
+.imgheart{
+    vertical-align: bottom;
+}
 #photodisplay{
     display: grid;
     grid-template-columns: 33% 33% auto;
