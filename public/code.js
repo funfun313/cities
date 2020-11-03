@@ -4,6 +4,7 @@ const storageRef = storage.ref();
 const dbRef = firebase.app().database();
 const postsRef = dbRef.ref('posts');
 const usersRef = dbRef.ref('users');
+const likesRef = dbRef.ref('likes');
 
 const f = document.getElementById("myFile");
 
@@ -77,19 +78,31 @@ function displayAllPhotos(snapshot){
         catSnapshot.forEach(function(childSnapshot){
             console.log(childSnapshot.val());
             console.log(childSnapshot.val().img_pth);
-            let img = storageRef.child(childSnapshot.val().img_pth);
-            console.log("set img");
-            img.getDownloadURL().then(function(url){
-                    // write some html
-                    console.log("right before the html");
-                photodiv.innerHTML = photodiv.innerHTML + "<div><div class='photo'><div class= 'author'>"+ childSnapshot.val().author +  "</div><img src = '" + url + "' width = '200px'><div class='caption'>"+ childSnapshot.val().caption +"</div></div><div class = 'likes'><img src='img/heartunfilled.png' width = '25px' class = 'imgheart'> <span class = 'likecount'> 123 </span></div></div> ";
-            })
-
-                    
+           console.log(appAuth.currentUser);
+            // look up if this user has liked this photo
+            let likesCount = 0;
+            let imgHeart = 'img/heartunfilled.png';
+            likesRef.once("value").then(function(likesSnapshot){
+                likesSnapshot.forEach(function(like){
+                    if(like.val().photoID == childSnapshot.key){
+                        likesCount += 1;
+                        if(like.val().userEmail == appAuth.currentUser.email){
+                            imgHeart = 'img/heartfilled.png';
+                            console.log("like found");
+                        }
+                        
+                    }
+                })
+                let img = storageRef.child(childSnapshot.val().img_pth);
+                console.log("set img");
+                img.getDownloadURL().then(function(url){
+                        // write some html
+                        console.log(imgHeart);
+                    photodiv.innerHTML = photodiv.innerHTML + "<div><div class='photo'><div class= 'author'>"+ childSnapshot.val().author +  "</div><img src = '" + url + "' width = '200px'><div class='caption'>"+ childSnapshot.val().caption +"</div></div><div class = 'likes'><img src='"+ imgHeart +"' width = '25px' class = 'imgheart'> <span class = 'likecount'> 123 </span></div></div> ";
+                })
+            })       
         })
-
     })
-
 }
 function upload(){
     console.log("starting to store file...");
