@@ -98,7 +98,7 @@ function displayAllPhotos(snapshot){
                 img.getDownloadURL().then(function(url){
                         // write some html
                         console.log(imgHeart);
-                    photodiv.innerHTML = photodiv.innerHTML + "<div><div class='photo'><div class= 'author'>"+ childSnapshot.val().author +  "</div><img src = '" + url + "' width = '200px'><div class='caption'>"+ childSnapshot.val().caption +"</div></div><div class = 'likes'><img src='"+ imgHeart +"' width = '25px' class = 'imgheart'> <span class = 'likecount'> 123 </span></div></div> ";
+                    photodiv.innerHTML = photodiv.innerHTML + "<div><div class='photo'><div class= 'author'>"+ childSnapshot.val().author +  "</div><img src = '" + url + "' width = '200px'><div class='caption'>"+ childSnapshot.val().caption +"</div></div><div class = 'likes'><button onclick='addLike("+ childSnapshot.key +")'><img src='"+ imgHeart +"' width = '25px' class = 'imgheart'></button><span class = 'likecount'> 123 </span></div></div> ";
                 })
             })       
         })
@@ -140,6 +140,23 @@ function savePicInfo(img){
             date_added: Date.now()
         }
     );    
+}
+
+function addLike(currentPhoto){
+    likesRef.once("value").then(function(snapshot){
+        snapshot.forEach(function(currentLike){
+            console.log(currentLike.val()); 
+            if(currentLike.val()["userEmail"] == appAuth.currentUser.email && currentPhoto == currentLike.val()["photoID"]){
+                // matched like to email and photo
+                // delete like from the database
+                //exit the function 
+            } 
+        }) //got out of the loop for checking for likes 
+        likesRef.push( {
+            userEmail : appAuth.currentUser.email,
+            photoID : currentPhoto,
+        })
+    })
 }
 
 function openupload(){
