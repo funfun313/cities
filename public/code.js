@@ -17,6 +17,8 @@ const loginDisplay = document.getElementById("loginlink");
 const logoutDisplay = document.getElementById("logoutlink");
 const uploadDisplay = document.getElementById("openupload");
 
+//let likesCount = 0;
+//let imgHeart = 'img/heartunfilled.png';
 
 window.onload = function(){
     //see autnentication state
@@ -38,6 +40,18 @@ window.onload = function(){
 postsRef.on("value", function(snapshot){
     console.log(snapshot);
     displayAllPhotos(snapshot);
+})
+
+// listens to changes in the likes
+likesRef.on("value", function(snapshot){
+    postsRef.once("value").then(function(photosnapshot){
+        photosnapshot.forEach(function(categorysnapshot){
+            categorysnapshot.forEach(function(myphoto){
+                displayLikes(myphoto.key);
+            })
+        })
+
+    })
 })
 
 //this function listens to changes in authenication
@@ -80,9 +94,10 @@ function displayAllPhotos(snapshot){
             console.log(childSnapshot.val().img_pth);
            console.log(appAuth.currentUser);
             // look up if this user has liked this photo
-            let likesCount = 0;
-            let imgHeart = 'img/heartunfilled.png';
+            
             likesRef.once("value").then(function(likesSnapshot){
+                let likesCount = 0;
+                let imgHeart = 'img/heartunfilled.png';
                 likesSnapshot.forEach(function(like){
                     if(like.val().photoID == childSnapshot.key){
                         likesCount += 1;
@@ -98,12 +113,31 @@ function displayAllPhotos(snapshot){
                 img.getDownloadURL().then(function(url){
                         // write some html
                         console.log(imgHeart);
-                    photodiv.innerHTML = photodiv.innerHTML + "<div><div class='photo'><div class= 'author'>"+ childSnapshot.val().author +  "</div><img src = '" + url + "' width = '200px'><div class='caption'>"+ childSnapshot.val().caption +"</div></div><div class = 'likes'><button onclick='addLike(\""+ childSnapshot.key +"\")'><img src='"+ imgHeart +"' width = '25px' class = 'imgheart'></button><span class = 'likecount'> 123 </span></div></div> ";
+                    photodiv.innerHTML = photodiv.innerHTML + "<div><div class='photo'><div class= 'author'>"+ childSnapshot.val().author +  "</div><img src = '" + url + "' width = '200px'><div class='caption'>"+ childSnapshot.val().caption +"</div></div><div class = 'likes'><button onclick='addLike(\""+ childSnapshot.key +"\")'><img src='"+ imgHeart +"' width = '25px' class = 'imgheart'></button><span class = 'likecount'>"+likesCount+"</span></div></div> ";
                 })
             })       
         })
     })
 }
+
+function displayLikes(currentPhotoID){
+    // look up if this user has liked this photo
+    let likesCount = 0;
+    let imgHeart = 'img/heartunfilled.png';
+    likesRef.once("value").then(function(likesSnapshot){
+        likesSnapshot.forEach(function(like){
+            if(like.val().photoID == currentPhotoID){
+                likesCount += 1;
+                if(like.val().userEmail == appAuth.currentUser.email){
+                    imgHeart = 'img/heartfilled.png';
+                    console.log("like found");
+                }
+                
+            }
+        })
+    })
+}
+
 function upload(){
     console.log("starting to store file...");
     let imgname = f.files[0]["name"];
