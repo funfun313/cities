@@ -44,10 +44,11 @@ postsRef.on("value", function(snapshot){
 
 // listens to changes in the likes
 likesRef.on("value", function(snapshot){
+    console.log("likes updated");
     postsRef.once("value").then(function(photosnapshot){
         photosnapshot.forEach(function(categorysnapshot){
             categorysnapshot.forEach(function(myphoto){
-                displayLikes(myphoto.key);
+                displayLikes(myphoto);
             })
         })
 
@@ -120,20 +121,28 @@ function displayAllPhotos(snapshot){
     })
 }
 
-function displayLikes(currentPhotoID){
+function displayLikes(currentPhotoSnapshot){
     // look up if this user has liked this photo
     let likesCount = 0;
     let imgHeart = 'img/heartunfilled.png';
     likesRef.once("value").then(function(likesSnapshot){
         likesSnapshot.forEach(function(like){
-            if(like.val().photoID == currentPhotoID){
+            if(like.val().photoID == currentPhotoSnapshot.key){
                 likesCount += 1;
                 if(like.val().userEmail == appAuth.currentUser.email){
                     imgHeart = 'img/heartfilled.png';
                     console.log("like found");
-                }
-                
-            }
+                }               
+            } 
+        })
+        const photodiv = document.getElementById("photodisplay");
+        photodiv.innerHTML = "";
+        let img = storageRef.child(currentPhotoSnapshot.val().img_pth);
+        console.log("set img");
+        img.getDownloadURL().then(function(url){
+                // write some html
+                console.log(imgHeart);
+            photodiv.innerHTML = photodiv.innerHTML + "<div><div class='photo'><div class= 'author'>"+ currentPhotoSnapshot.val().author +  "</div><img src = '" + url + "' width = '200px'><div class='caption'>"+ currentPhotoSnapshot.val().caption +"</div></div><div class = 'likes'><button onclick='addLike(\""+ currentPhotoSnapshot.key +"\")'><img src='"+ imgHeart +"' width = '25px' class = 'imgheart'></button><span class = 'likecount'>"+likesCount+"</span></div></div> ";
         })
     })
 }
@@ -183,6 +192,7 @@ function addLike(currentPhoto){
             console.log(currentLike.val()); 
             if(currentLike.val()["userEmail"] == appAuth.currentUser.email && currentPhoto == currentLike.val()["photoID"]){
                 // matched like to email and photo
+                 addNewLike = false;
                  console.log(currentLike.key);
                  currentLikeRef = likesRef.child(currentLike.key);
                 // delete like from the database
@@ -192,9 +202,6 @@ function addLike(currentPhoto){
                 //exit the function 
 
             }
-            else{
-                addNewLike = false;
-            } 
         }) //got out of the loop for checking for likes 
         if (addNewLike){
             likesRef.push( {
