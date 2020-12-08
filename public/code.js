@@ -2,7 +2,7 @@ const storage = firebase.app().storage();
 const storageRef = storage.ref();
 
 const dbRef = firebase.app().database();
-const postsRef = dbRef.ref('posts');
+const postsRef = dbRef.ref('posts').orderByChild("date_added");
 const usersRef = dbRef.ref('users');
 const likesRef = dbRef.ref('likes');
 
@@ -46,10 +46,8 @@ postsRef.on("value", function(snapshot){
 likesRef.on("value", function(snapshot){
     console.log("likes updated");
     postsRef.once("value").then(function(photosnapshot){
-        photosnapshot.forEach(function(categorysnapshot){
-            categorysnapshot.forEach(function(myphoto){
+        photosnapshot.forEach(function(myphoto){
                 displayLikes(myphoto);
-            })
         })
 
     })
@@ -89,8 +87,7 @@ function displayAllPhotos(snapshot){
     const photodiv = document.getElementById("photodisplay");
     photodiv.innerHTML = "";
     
-    snapshot.forEach(function(catSnapshot){
-        catSnapshot.forEach(function(childSnapshot){
+    snapshot.forEach(function(childSnapshot){
             console.log(childSnapshot.val());
             console.log(childSnapshot.val().img_pth);
            console.log(appAuth.currentUser);
@@ -117,12 +114,14 @@ function displayAllPhotos(snapshot){
                     photodiv.innerHTML = photodiv.innerHTML + "<div><div class='photo'><div class= 'author'>"+ childSnapshot.val().author +  "</div><img src = '" + url + "' width = '200px'><div class='caption'>"+ childSnapshot.val().caption +"</div></div><div class = 'likes'><button onclick='addLike(\""+ childSnapshot.key +"\")'><img src='"+ imgHeart +"' width = '25px' class = 'imgheart'></button><span class = 'likecount'>"+likesCount+"</span></div></div> ";
                 })
             })       
-        })
     })
 }
 
 function displayLikes(currentPhotoSnapshot){
     // look up if this user has liked this photo
+    if(!appAuth.currentUser){
+        return;
+    }
     let likesCount = 0;
     let imgHeart = 'img/heartunfilled.png';
     likesRef.once("value").then(function(likesSnapshot){
@@ -163,20 +162,10 @@ function upload(){
 }
 
 function savePicInfo(img){
-    // get the value from the radio buttons
-    let radiobtn_list = document.getElementsByName("category");
-    let category = "";
-    for(let i = 0; i < radiobtn_list.length; i++){
-        let radiobtn = radiobtn_list[i];
-        if(radiobtn.checked){
-            category = radiobtn.value;
-        }
-    }
-    console.log(category);
     console.log(img);
     console.log(document.getElementById("captiontext").value);
     
-    postsRef.child(category).push( {
+    postsRef.push( {
             author: appAuth.currentUser.displayName,
             caption: document.getElementById("captiontext").value,
             img_pth: img,
